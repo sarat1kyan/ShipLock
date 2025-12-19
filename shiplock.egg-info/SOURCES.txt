@@ -1,0 +1,9 @@
+README.md
+setup.py
+shiplock.egg-info/PKG-INFO
+shiplock.egg-info/SOURCES.txt
+shiplock.egg-info/dependency_links.txt
+shiplock.egg-info/entry_points.txt
+shiplock.egg-info/not-zip-safe
+shiplock.egg-info/requires.txt
+shiplock.egg-info/top_level.txt

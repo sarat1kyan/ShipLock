@@ -1,0 +1,757 @@
+Metadata-Version: 2.4
+Name: shiplock
+Version: 1.0.0
+Summary: Secure Docker Product Distribution CLI
+Home-page: https://github.com/yourusername/shiplock
+Author: Your Name
+Author-email: your.email@example.com
+License: Commercial
+Project-URL: Bug Reports, https://github.com/yourusername/shiplock/issues
+Project-URL: Source, https://github.com/yourusername/shiplock
+Project-URL: Documentation, https://shiplock.readthedocs.io
+Keywords: docker distribution security licensing packaging
+Classifier: Development Status :: 4 - Beta
+Classifier: Intended Audience :: Developers
+Classifier: Topic :: Software Development :: Build Tools
+Classifier: Topic :: Security
+Classifier: Topic :: System :: Software Distribution
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Operating System :: POSIX :: Linux
+Classifier: Operating System :: MacOS :: MacOS X
+Requires-Python: >=3.8
+Description-Content-Type: text/markdown
+Requires-Dist: rich>=13.0.0
+Requires-Dist: click>=8.0.0
+Requires-Dist: colorama>=0.4.6
+Requires-Dist: pyyaml>=6.0
+Requires-Dist: toml>=0.10.2
+Requires-Dist: cryptography>=41.0.0
+Requires-Dist: pycryptodome>=3.19.0
+Requires-Dist: docker>=6.0.0
+Requires-Dist: docker-compose>=1.29.0
+Requires-Dist: netifaces>=0.11.0
+Requires-Dist: psutil>=5.9.0
+Requires-Dist: pyminifier>=2.1
+Requires-Dist: python-obfuscator>=0.1.0
+Requires-Dist: py7zr>=0.20.0
+Provides-Extra: dev
+Requires-Dist: pytest>=7.4.0; extra == "dev"
+Requires-Dist: pytest-cov>=4.1.0; extra == "dev"
+Requires-Dist: black>=23.0.0; extra == "dev"
+Requires-Dist: flake8>=6.0.0; extra == "dev"
+Requires-Dist: mypy>=1.5.0; extra == "dev"
+Requires-Dist: pre-commit>=3.3.0; extra == "dev"
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: description
+Dynamic: description-content-type
+Dynamic: home-page
+Dynamic: keywords
+Dynamic: license
+Dynamic: project-url
+Dynamic: provides-extra
+Dynamic: requires-dist
+Dynamic: requires-python
+Dynamic: summary
+
+# ShipLock - Secure Docker Product Distribution
+
+**Enterprise-grade CLI tool for shipping Docker-based products without source code exposure**
+
+[![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)](https://github.com/yourusername/shiplock)
+[![License](https://img.shields.io/badge/license-Commercial-red.svg)](LICENSE)
+[![Python](https://img.shields.io/badge/python-3.8+-green.svg)](https://www.python.org)
+
+---
+
+## 🎯 Overview
+
+ShipLock is a production-ready CLI tool designed for software vendors who need to distribute Docker-based products to clients without exposing source code. It provides:
+
+- **Source Code Protection**: Complete removal of source files from distributions
+- **Strong Licensing**: Cryptographic license system with machine binding
+- **Beautiful CLI**: Rich, colorful, progress-tracked interface
+- **Multi-stage Builds**: Automatic optimization for smaller, secure images
+- **Distribution Options**: ZIP archives or GitHub delivery
+- **Offline Validation**: License verification without internet connectivity
+- **Anti-Tampering**: Integrity checks and obfuscation
+
+---
+
+## 🏗️ Architecture
+
+```
+┌─────────────────────────────────────────────────────────┐
+│                    ShipLock CLI                         │
+├─────────────────────────────────────────────────────────┤
+│  Analysis Engine  │  Build Engine  │  License Engine   │
+│  ─────────────────┼────────────────┼─────────────────  │
+│  • Project Scan   │  • Image Build │  • RSA 4096-bit   │
+│  • Validation     │  • Strip Source│  • HW Fingerprint │
+│  • Dependency Map │  • Multi-stage │  • Offline Verify │
+│                   │  • Compression │  • Anti-Bypass    │
+├─────────────────────────────────────────────────────────┤
+│           Distribution Engine │ Security Layer          │
+│  ──────────────────────────────┼─────────────────────  │
+│  • ZIP Bundler                │  • Code Obfuscation   │
+│  • GitHub Publisher           │  • Integrity Checks    │
+│  • Runtime Generator          │  • Anti-Debug         │
+└─────────────────────────────────────────────────────────┘
+```
+
+### Core Components
+
+1. **Project Analyzer** (`shiplock_analyzer.py`)
+   - Scans Docker projects
+   - Detects Dockerfile and docker-compose.yml
+   - Validates configuration
+   - Identifies source files for exclusion
+
+2. **Bundle Builder** (`shiplock_builder.py`)
+   - Builds Docker images with multi-stage optimization
+   - Strips source code from images
+   - Generates runtime scripts
+   - Creates distributable packages
+
+3. **License System** (`shiplock_license.py`)
+   - RSA-4096 cryptographic signing
+   - Hardware fingerprinting
+   - Expiration management
+   - Offline validation
+
+4. **Security Hardening** (`shiplock_security.py`)
+   - Python bytecode compilation
+   - Code obfuscation
+   - Integrity verification
+   - Anti-debugging measures
+
+---
+
+## 📦 Installation
+
+### Prerequisites
+
+- Python 3.8 or higher
+- Docker 20.10+
+- Docker Compose 1.29+
+- Git (for GitHub delivery)
+
+### Install from Source
+
+```bash
+# Clone repository
+git clone https://github.com/yourusername/shiplock.git
+cd shiplock
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Install ShipLock
+pip install -e .
+
+# Verify installation
+shiplock --version
+```
+
+### Dependencies
+
+```
+rich>=13.0.0
+click>=8.0.0
+pyyaml>=6.0
+cryptography>=41.0.0
+docker>=6.0.0
+netifaces>=0.11.0
+```
+
+---
+
+## 🚀 Quick Start
+
+### 1. Initialize Your Project
+
+```bash
+cd /path/to/your/docker/project
+shiplock init
+```
+
+This creates:
+- `.shiplock/config.yaml` - Configuration file
+- `.bundleignore` - Files to exclude from distribution
+
+### 2. Analyze Your Project
+
+```bash
+shiplock analyze
+```
+
+Shows:
+- Docker configuration detected
+- Files to include/exclude
+- Security warnings
+- Build readiness
+
+### 3. Build Secure Bundle
+
+```bash
+# Build to directory
+shiplock build --path . --output ./dist
+
+# Build as ZIP archive
+shiplock build --path . --output ./dist --zip
+
+# Push to GitHub
+shiplock build --path . --github git@github.com:user/repo.git
+```
+
+### 4. Generate License
+
+```bash
+shiplock license generate \
+  --product-id "MY-PRODUCT-001" \
+  --client "Acme Corporation" \
+  --expires "2025-12-31" \
+  --machine-bound \
+  --output license.key
+```
+
+### 5. Distribute to Client
+
+Send to client:
+- Bundle (ZIP or repository)
+- License file (`license.key`)
+- Quick start instructions
+
+### 6. Client Runs Product
+
+```bash
+# Client extracts bundle
+unzip my-product-bundle.zip
+cd my-product-bundle
+
+# Client places license
+cp /path/to/license.key ./
+
+# Client runs product
+./runtime/run.sh
+```
+
+---
+
+## 📋 CLI Commands
+
+### Project Management
+
+```bash
+# Initialize project
+shiplock init [--path PATH]
+
+# Analyze project
+shiplock analyze [--path PATH]
+```
+
+### Building
+
+```bash
+# Build bundle
+shiplock build \
+  --path PATH \          # Project directory
+  --output OUTPUT \      # Output directory
+  [--zip] \             # Create ZIP archive
+  [--github REPO]       # Push to GitHub
+```
+
+### License Management
+
+```bash
+# Generate license
+shiplock license generate \
+  --product-id ID \
+  --client NAME \
+  [--expires DATE] \
+  [--machine-bound] \
+  --output FILE
+
+# Verify license
+shiplock license verify LICENSE_FILE
+```
+
+---
+
+## 🔧 Configuration
+
+### `.shiplock/config.yaml`
+
+```yaml
+project:
+  name: my-product
+  version: 1.0.0
+
+build:
+  strip_source: true
+  multi_stage: true
+  compress: true
+
+exclude:
+  - "*.py"
+  - "*.js"
+  - "*.ts"
+  - "src/"
+  - "tests/"
+  - ".git/"
+
+include:
+  - "docker-compose.yml"
+  - "Dockerfile"
+  - ".env.example"
+
+licensing:
+  enabled: true
+  type: machine_bound
+  offline_validation: true
+```
+
+### `.bundleignore`
+
+```
+# Source code
+*.py
+*.js
+*.ts
+src/
+
+# Development files
+.git/
+tests/
+*.log
+```
+
+---
+
+## 🔐 Security Model
+
+### Source Code Protection
+
+1. **Multi-Stage Dockerfile Detection**
+   - Automatically detects multi-stage builds
+   - Ensures only runtime artifacts are included
+   - Verifies no source files in final images
+
+2. **Source File Exclusion**
+   - Automatically excludes `.py`, `.js`, `.ts`, `.go`, etc.
+   - Configurable via `.bundleignore`
+   - Validation before build
+
+3. **Image Export**
+   - Exports as compressed tar archives
+   - Source code never reaches distribution
+
+### Licensing System
+
+#### Key Features
+
+- **RSA-4096 Cryptographic Signing**
+  - Public/private key pair
+  - PSS padding with SHA-256
+  - Impossible to forge without private key
+
+- **Hardware Fingerprinting**
+  - Machine ID (from `/etc/machine-id`)
+  - CPU information
+  - MAC address
+  - Hostname
+  - Combined SHA-256 hash
+
+- **Offline Validation**
+  - No internet required
+  - All verification done locally
+  - Machine binding enforced
+
+- **Expiration Management**
+  - Optional time-based licenses
+  - ISO 8601 date format
+  - Automatic expiry checking
+
+#### License Structure
+
+```json
+{
+  "license": "base64_encoded_payload",
+  "signature": "base64_rsa_signature",
+  "public_key": "pem_public_key",
+  "integrity": "sha256_hash"
+}
+```
+
+#### Payload Contents
+
+```json
+{
+  "license_id": "uuid",
+  "product_id": "MY-PRODUCT-001",
+  "client": "Acme Corp",
+  "issued_at": "2024-01-01T00:00:00",
+  "expires_at": "2025-12-31T23:59:59",
+  "machine_bound": true,
+  "machine_id": "sha256_hardware_fingerprint",
+  "features": {}
+}
+```
+
+### Anti-Tampering
+
+1. **Integrity Verification**
+   - SHA-256 checksums for all files
+   - Manifest verification on startup
+   - Detects file modifications
+
+2. **Code Obfuscation**
+   - Python bytecode compilation
+   - String encoding
+   - Variable name randomization
+   - Dead code injection
+
+3. **Anti-Debugging**
+   - Debugger detection
+   - ptrace monitoring (Linux)
+   - Environment variable checks
+
+4. **Runtime Protection**
+   - Entrypoint verification
+   - License check before startup
+   - Health checks validate license
+
+---
+
+## 🛡️ Threat Model & Mitigations
+
+### Threat: Source Code Extraction
+
+**Attack Vectors:**
+- Extracting source from Docker images
+- Finding source in bundle files
+- Reverse engineering from bytecode
+
+**Mitigations:**
+- ✅ Multi-stage builds remove source
+- ✅ Source files excluded via `.bundleignore`
+- ✅ Automated verification checks
+- ✅ Bytecode compilation
+- ✅ Code obfuscation
+
+### Threat: License Bypass
+
+**Attack Vectors:**
+- Environment variable manipulation
+- Patching verification code
+- Copying license to another machine
+- Time manipulation for expiry
+
+**Mitigations:**
+- ✅ Cryptographic signatures (RSA-4096)
+- ✅ Hardware fingerprinting
+- ✅ Code obfuscation
+- ✅ Integrity checks
+- ✅ Anti-debugging
+- ✅ Multiple verification layers
+
+### Threat: License Sharing
+
+**Attack Vectors:**
+- Sharing license file between machines
+- VM cloning with license
+
+**Mitigations:**
+- ✅ Machine-bound licenses
+- ✅ Hardware fingerprinting
+- ✅ Unique machine ID generation
+- ⚠️ VM detection (can be enhanced)
+
+### Threat: Tampering
+
+**Attack Vectors:**
+- Modifying verification scripts
+- Replacing checksums
+- Removing integrity checks
+
+**Mitigations:**
+- ✅ Cryptographic integrity hashes
+- ✅ Obfuscated verification code
+- ✅ Multi-layer verification
+- ✅ Manifest verification
+- ⚠️ Self-modifying code (can be added)
+
+---
+
+## 📊 Bundle Structure
+
+```
+my-product-bundle/
+├── images/
+│   ├── app_web_latest.tar.gz
+│   ├── app_db_latest.tar.gz
+│   └── app_redis_latest.tar.gz
+├── runtime/
+│   ├── run.sh                    # Main launcher
+│   ├── load_images.sh            # Image loader
+│   ├── docker-compose.yml        # Sanitized compose file
+│   ├── verify_license.sh         # License check script
+│   ├── verify_license.py         # Obfuscated verifier
+│   ├── verify_integrity.py       # Integrity checker
+│   ├── anti_debug.py             # Anti-debug protection
+│   └── README.md                 # Client instructions
+├── MANIFEST.json                 # Bundle metadata
+├── CHECKSUMS.txt                 # File checksums
+└── license.key                   # (Added by client)
+```
+
+---
+
+## 🔄 Typical Workflow
+
+### Vendor Side
+
+```bash
+# 1. Develop your Docker application
+cd my-docker-app
+
+# 2. Initialize ShipLock
+shiplock init
+
+# 3. Configure exclusions
+nano .bundleignore
+
+# 4. Analyze project
+shiplock analyze
+
+# 5. Build secure bundle
+shiplock build --path . --output ./dist --zip
+
+# 6. Generate license for client
+shiplock license generate \
+  --product-id "PRODUCT-001" \
+  --client "Client Name" \
+  --expires "2025-12-31" \
+  --machine-bound
+
+# 7. Send to client
+# - dist/my-docker-app-bundle.zip
+# - license.key
+```
+
+### Client Side
+
+```bash
+# 1. Receive bundle and license
+unzip my-docker-app-bundle.zip
+cd my-docker-app-bundle
+
+# 2. Place license
+cp ~/Downloads/license.key ./
+
+# 3. Run product
+./runtime/run.sh
+
+# Output:
+# [0/4] Verifying bundle integrity... ✓
+# [1/4] Verifying license... ✓
+# [2/4] Loading Docker images... ✓
+# [3/4] Starting services... ✓
+# [4/4] Checking service status... ✓
+# Application started successfully!
+```
+
+---
+
+## 🧪 Testing
+
+### Test Source Protection
+
+```bash
+# Build bundle
+shiplock build --path ./test-project --output ./test-dist
+
+# Verify no source files in images
+docker load < test-dist/images/*.tar.gz
+docker run --rm <image> find / -name "*.py" 2>/dev/null
+
+# Should return empty or only system Python files
+```
+
+### Test License Verification
+
+```bash
+# Generate test license
+shiplock license generate \
+  --product-id "TEST" \
+  --client "Test" \
+  --machine-bound \
+  --output test-license.key
+
+# Verify
+shiplock license verify test-license.key
+
+# Test on different machine (should fail)
+scp test-license.key other-machine:
+ssh other-machine "shiplock license verify test-license.key"
+# Should fail with "License not valid for this machine"
+```
+
+### Test Bundle Integrity
+
+```bash
+# Modify a file in bundle
+echo "tampered" >> test-dist/runtime/run.sh
+
+# Try to run
+cd test-dist
+./runtime/run.sh
+# Should fail with integrity error
+```
+
+---
+
+## 🚨 Limitations & Considerations
+
+### Current Limitations
+
+1. **Container Escape**: If attacker gains root access to container, they could potentially:
+   - Extract image layers
+   - Access memory
+   - **Mitigation**: Use read-only filesystems, drop capabilities
+
+2. **Bytecode Decompilation**: Python bytecode can be decompiled:
+   - **Mitigation**: Obfuscation makes it difficult but not impossible
+   - **Enhancement**: Consider Cython or native compilation for critical code
+
+3. **VM Cloning**: Cloning a VM with activated license:
+   - **Mitigation**: Hardware fingerprinting helps but not perfect
+   - **Enhancement**: Add online activation tracking
+
+4. **Time Manipulation**: Client could change system time:
+   - **Mitigation**: Limited - trust client's clock
+   - **Enhancement**: Add NTP verification or online check
+
+### Best Practices
+
+1. **Multi-Stage Dockerfiles**
+   ```dockerfile
+   # Build stage
+   FROM python:3.11 AS builder
+   COPY requirements.txt .
+   RUN pip install -r requirements.txt
+   COPY src/ /app/src/
+   RUN python -m compileall /app/src/
+   
+   # Runtime stage
+   FROM python:3.11-slim
+   COPY --from=builder /app/src/*.pyc /app/
+   # No source files copied!
+   ```
+
+2. **Sensitive Data**
+   - Never include real secrets in `.env`
+   - Use `.env.example` with placeholders
+   - Document required environment variables
+
+3. **License Distribution**
+   - Generate unique license per client
+   - Keep private key secure (encrypt, backup)
+   - Track license-to-client mapping
+
+---
+
+## 🔮 Future Enhancements
+
+### Planned Features
+
+1. **Enhanced Obfuscation**
+   - C extension compilation
+   - Cython integration
+   - Native code compilation
+
+2. **Online License Activation**
+   - Phone-home activation
+   - Usage analytics
+   - License revocation
+
+3. **Advanced Anti-Piracy**
+   - Code signing
+   - Kernel-level checks
+   - Watermarking
+
+4. **Plugin System**
+   - Custom verification plugins
+   - License feature gates
+   - Usage tracking
+
+5. **Multi-Platform Support**
+   - Windows containers
+   - ARM architectures
+   - Kubernetes deployments
+
+6. **Admin Portal**
+   - Web interface for license management
+   - Client management
+   - Analytics dashboard
+
+---
+
+## 🤝 Contributing
+
+We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+
+### Development Setup
+
+```bash
+git clone https://github.com/yourusername/shiplock.git
+cd shiplock
+python -m venv venv
+source venv/bin/activate
+pip install -e ".[dev]"
+pytest
+```
+
+---
+
+## 📄 License
+
+ShipLock is commercial software. See [LICENSE](LICENSE) for details.
+
+---
+
+## 🙋 Support
+
+- **Documentation**: https://shiplock.readthedocs.io
+- **Issues**: https://github.com/yourusername/shiplock/issues
+- **Email**: support@shiplock.io
+- **Discord**: https://discord.gg/shiplock
+
+---
+
+## 🎓 Credits
+
+Created by security engineers who understand the challenges of protecting intellectual property in containerized distributions.
+
+**Core Team:**
+- Lead Developer: [Your Name]
+- Security Architect: [Name]
+- DevOps Engineer: [Name]
+
+---
+
+## ⚖️ Legal Notice
+
+This tool is designed for legitimate software vendors to protect their intellectual property. Users are responsible for ensuring compliance with all applicable laws and regulations in their jurisdiction.
+
+**Disclaimer**: While ShipLock implements strong security measures, no system is 100% secure. This tool significantly raises the bar for attackers but should be part of a comprehensive security strategy.
+
+---
+
+**Made with ❤️ for software vendors who care about protecting their IP**
+

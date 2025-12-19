@@ -1,0 +1,2 @@
+[console_scripts]
+shiplock = shiplock_cli:cli
